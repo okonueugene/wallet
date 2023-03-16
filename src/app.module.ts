@@ -3,9 +3,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TransactionModule } from './modules/transaction.module';
+import { UserModule } from './modules/user.module';
+import { WalletModule } from './modules/wallet.module';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb+srv://root:1234@cluster0.m14jpyt.mongodb.net/wallet?retryWrites=true&w=majority')],
+  imports: [UserModule, WalletModule,TransactionModule,
+    MongooseModule.forRoot('mongodb+srv://root:1234@cluster0.tfquflw.mongodb.net/wallet?retryWrites=true&w=majority')],
   controllers: [AppController],
   providers: [AppService],
 })

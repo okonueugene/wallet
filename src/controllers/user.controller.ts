@@ -1,18 +1,53 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+
 import { UserService } from '../services/user.service';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { WalletService } from 'src/services/wallet.service';
+import { Profile } from 'src/models/user.model';
 
 @Controller('users')
-export class UserController{
+export class UserController {
 
-    constructor (private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        private readonly walletService: WalletService,
+    ) { }
 
     @Post()
-    async create(@Body() createUserDto: CreateUserDto) {
-        const user = await  this.userService.create(createUserDto);
-        return user;
+    async addUser(
+        @Body('name') name: string,
+        @Body('email') email: string,
+        @Body('password') password: string,
+    ) {
+        const generatedId = await this.userService.createUser(name, email, password);
+        return { id: generatedId };
 
     }
 
+    @Get()
+    async findAllUsers() {
+        const users = await this.userService.findAllUsers();
+        return users;
+    }
 
+    @Get(':id/profile')
+
+    async getProfile(@Param('id') userId: string) : Promise< Profile> {
+        const user = await this.userService.findOneUser(userId);
+
+        const walletSummaries = await this.walletService.findAllWallets(userId);
+        
+        const overAllBalance = walletSummaries.reduce((acc, wallet) => acc + wallet.balance, 0);
+
+        //construct and return the profile
+        const profile: Profile = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            overallBalance: overAllBalance,
+            wallets: walletSummaries
+        };
+
+        return profile;
+    
+    }
 }

@@ -1,23 +1,27 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import * as mongoose from 'mongoose';
+import { Wallet, WalletSummary } from '../models/wallet.model';
 
+export const UserSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    wallets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Wallet' }]
+});
 
-
-@Schema()
-export class User {
-    @Prop({ required: true })
+export interface User extends mongoose.Document {
+    id: string;
     name: string;
-
-    @Prop({ required: true })
     email: string;
-
-    @Prop({ required: true })
     password: string;
+    wallets: Wallet[]
+}
 
-    @Prop({ type: [{ type: Types.ObjectId, ref: 'Wallet'}] })
-    wallets: Types.ObjectId[];
 
-    
-}   
-export type UserDocument = User & Document;
-export const UserSchema = SchemaFactory.createForClass(User);
+export interface Profile  {
+    id: string;
+    name: string;
+    email: string;
+    overallBalance: number;
+    wallets: WalletSummary[];
+}
+
