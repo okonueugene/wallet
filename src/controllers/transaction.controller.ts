@@ -5,7 +5,7 @@ import { TransactionService } from "src/services/transaction.service";
 
 @Controller('users/:userId/wallets/:walletId/transactions')
 export class TransactionController {
-    [x: string]: any;
+    walletService: any;
 
     constructor(private readonly transactionService: TransactionService) { }
 

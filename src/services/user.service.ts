@@ -7,7 +7,6 @@ import { User } from 'src/models/user.model';
 @Injectable()
 
 export class UserService {
-[x: string]: any;
 private users: User[] = [];
 
 constructor(@InjectModel('User') private readonly userModel: Model<User>) {}    
@@ -34,7 +33,7 @@ async findOneUser(userId: string): Promise<User> {
         throw new NotFoundException('Could not find user');
     }
 
-    return user;
+    return user.toObject({ getters: true });
 
 }
 

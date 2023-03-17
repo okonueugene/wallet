@@ -28,6 +28,12 @@ export class UserController {
         const users = await this.userService.findAllUsers();
         return users;
     }
+    //find a user by id
+    @Get(':id')
+    async findOneUser(@Param('id') userId: string) {
+        const user = await this.userService.findOneUser(userId);
+        return user;
+    }
 
     @Get(':id/profile')
 

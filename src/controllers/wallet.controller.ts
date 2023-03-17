@@ -8,21 +8,27 @@ export class WalletController {
 constructor(private readonly walletService: WalletService ) {}
 //add a wallet for a user
 @Post()
-async createWallet( 
+async addWallet(
+    @Param('userId') userId: string,
     @Body('name') name: string,
     @Body('balance') balance: number,
-    @Body('userId') userId: string,
 ) {
-    const generatedId = await this.walletService.createWallet(name, balance,  userId);
+    const generatedId = await this.walletService.createWallet(userId, name, balance);
     return { id: generatedId };
-
 }
 
+@Get()
+async findAllWallets(@Param('userId') userId: string) {
+    const wallets = await this.walletService.findAllWallets(userId);
+    return wallets;
+}
 
 @Get(':id')
-async findOneWallet(@Param('id') walletId: string, @Param('userId') userId: string) {
- const wallet = await this.walletService.findOneWallet(userId,walletId);
+async findOneWallet(@Param('id') walletId: string) {
+ const wallet = await this.walletService.findOneWallet(walletId);
     return wallet;
 }
+
+
 
 }
