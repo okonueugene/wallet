@@ -23,7 +23,7 @@ export class WalletService {
     }
 
     async findAllWallets(userId: string) {
-        const wallets = await this.walletModel.find().exec();
+        const wallets = await this.walletModel.find({user: userId}).exec();
         return wallets.map(wallet => ({
             id: wallet.id,
             name: wallet.name,
@@ -33,10 +33,10 @@ export class WalletService {
     }
 
 
-    async findOneWallet( walletId: string) {
+    async findOneWallet(userId: string, walletId: string) {
         let wallet;
         try {
-            wallet = await this.walletModel.findOne({id: walletId }).exec();
+            wallet = await this.walletModel.findOne({user: userId,id: walletId }).exec();
 
         }
         catch (error) {

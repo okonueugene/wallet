@@ -29,7 +29,7 @@ async createTransaction(userId: string, walletId: string, amount: number, type: 
         date: new Date()
     });
     const result = await newTransaction.save();
-    const wallet = await this.findWallet(walletId);
+    const wallet = await this.findOneWallet(walletId);
     if (type === 'income') {
         wallet.balance += amount;
     } else {

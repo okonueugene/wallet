@@ -20,8 +20,8 @@ async createWallet(
 
 
 @Get(':id')
-async findOneWallet(@Param('id') walletId: string) {
- const wallet = await this.walletService.findOneWallet(walletId);
+async findOneWallet(@Param('id') walletId: string, @Param('userId') userId: string) {
+ const wallet = await this.walletService.findOneWallet(userId,walletId);
     return wallet;
 }
 
