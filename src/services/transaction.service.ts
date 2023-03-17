@@ -13,8 +13,19 @@ export class TransactionService {
     ) {}
 
     async createTransaction(userId: string, walletId: string, amount: number, type: 'income' | 'expense', description: string) {
+
+        const wallet = await this.walletService.findOneWallet(walletId);
+        if (type === 'expense') {
+            if (wallet.balance < amount) {
+                throw new Error('Insufficient balance');
+            }
+            wallet.balance -= amount;
+        } else {
+            wallet.balance += amount;
+        }
+        await wallet.save();
+        
         const newTransaction = new this.transactionModel({
-            user: userId, 
             amount: amount,
             type: type,
             description: description,
@@ -22,15 +33,10 @@ export class TransactionService {
             date: new Date()
         });
         const result = await newTransaction.save();
-        const wallet = await this.walletService.findOneWallet(walletId); 
-        if (type === 'income') {
-            wallet.balance += amount;
-        } else {
-            wallet.balance -= amount;
-        }
-        await wallet.save();
         return result.id as string;
     }
+
+
 
     async findTransactionsByWalledId(walletId: string) {
         const transactions = await this.transactionModel.find({wallet: walletId}).exec();

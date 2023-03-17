@@ -1,25 +1,25 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { TransactionService } from "src/services/transaction.service";
+import { WalletService } from "src/services/wallet.service";
 
 
 
 @Controller('users/:userId/wallets/:walletId/transactions')
 export class TransactionController {
-    walletService: any;
 
-    constructor(private readonly transactionService: TransactionService) { }
+    constructor(private readonly transactionService: TransactionService,
+        private readonly walletService: WalletService) { }
 
     @Post()
-    async createTransaction(
+    async addTransaction(
         @Param('userId') userId: string,
         @Param('walletId') walletId: string,
         @Body('amount') amount: number,
         @Body('type') type: 'income' | 'expense',
         @Body('description') description: string,
-      
     ) {
-    const generatedId = await this.transactionService.createTransaction(userId, walletId, amount, type, description);
-
+        const generatedId = await this.transactionService.createTransaction(userId, walletId, amount, type, description);
+        return { id: generatedId };
     }
 
     @Get(':id')

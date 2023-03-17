@@ -45,7 +45,7 @@ export class WalletService {
   async findOneWallet(walletId: string) {
     let wallet;
     try {
-      wallet = await this.walletModel.findById({ id: walletId }).exec();
+      wallet = await this.walletModel.findById(walletId ).exec();
     } catch (error) {
       throw new NotFoundException('Could not find wallet');
     }
